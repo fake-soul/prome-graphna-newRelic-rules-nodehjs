@@ -1,3 +1,9 @@
+/**
+ * Module dependencies.
+ */
+require('newrelic');
+
+
 var express = require('express'),
     Cors = require('cors'),
     bodyParser = require('body-parser'),
@@ -17,7 +23,9 @@ app.use(prometheus.responseCounters);
 prometheus.injectMetricsRoute(app);
 prometheus.startCollection();
 
+require('./routes/index')(app);
 require('./routes/registerUser')(app);
+require('./routes/testReq')(app);
 
 app.listen(API_PORT, () => {
     console.log("here started");
