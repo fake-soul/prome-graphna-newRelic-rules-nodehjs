@@ -1,41 +1,27 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var nools = require('nools');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// var filePath = __dirname + '/rules/helloworld.nools';
+// console.log(filePath);
+// var flow = nools.compile(filePath);
+// console.log('level 1');
+// var session = flow.getSession();
+// console.log('level 2');
+// var Output = flow.getDefined('output');
+// console.log('level 3');
+// session.assert(new Output("six"));
+// console.log('level 4');
+// session.match();
+//
+// console.log('Rule excuted @ '+ filePath);
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+var flow = nools.compile(__dirname + "/rules/sorting.nools"),
+    session = flow.getSession();
+    Message = flow.getDefined("message");
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+session.assert(new Message("ascending", [5,235,6,73,14]));
+session.match();
+console.log(Message);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
